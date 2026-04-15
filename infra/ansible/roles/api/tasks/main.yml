@@ -1,0 +1,37 @@
+- name: Instalar Node.js
+  shell: |
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
+    apt install -y nodejs
+  args:
+    executable: /bin/bash
+
+- name: Criar pasta app
+  file:
+    path: /home/vagrant/app
+    state: directory
+
+- name: Copiar backend
+  copy:
+    src: ../../../backend/
+    dest: /home/vagrant/app
+    owner: vagrant
+
+- name: Instalar dependências
+  npm:
+    path: /home/vagrant/app
+    
+- name: Criar arquivo .env
+  copy:
+    dest: /home/vagrant/app/.env
+    content: |
+      PORT=3000
+      DB_HOST=192.168.56.11
+      DB_USER=dev
+      DB_PASSWORD=123456
+      DB_NAME=crud
+
+- name: Rodar API
+  shell: |
+    nohup npm run dev > app.log 2>&1 &
+  args:
+    chdir: /home/vagrant/app

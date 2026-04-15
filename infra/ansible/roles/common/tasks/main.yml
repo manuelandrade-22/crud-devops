@@ -1,0 +1,11 @@
+- name: Atualizar pacotes
+  apt:
+    update_cache: yes
+
+- name: Instalar pacotes básicos
+  apt:
+    name:
+      - git
+      - curl
+      - vim
+    state: present
