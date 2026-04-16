@@ -1,0 +1,41 @@
+- name: Instalar Node.js
+  shell: |
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
+    apt install -y nodejs
+  args:
+    executable: /bin/bash
+
+- name: Instalar Nginx
+  apt:
+    name: nginx
+    state: present
+
+- name: Criar pasta frontend
+  file:
+    path: /home/vagrant/frontend
+    state: directory
+
+- name: Copiar frontend
+  copy:
+    src: ../../../frontend/
+    dest: /home/vagrant/frontend
+
+- name: Instalar dependências
+  npm:
+    path: /home/vagrant/frontend
+
+- name: Build do React
+  shell: npm run build
+  args:
+    chdir: /home/vagrant/frontend
+
+- name: Copiar build para nginx
+  copy:
+    src: /home/vagrant/frontend/dist/
+    dest: /var/www/html/
+    remote_src: yes
+
+- name: Reiniciar nginx
+  service:
+    name: nginx
+    state: restarted

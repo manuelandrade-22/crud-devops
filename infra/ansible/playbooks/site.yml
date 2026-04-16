@@ -1,0 +1,19 @@
+- hosts: all
+  become: true
+  roles:
+    - common
+
+- hosts: model
+  become: true
+  roles:
+    - postgres
+
+- hosts: api
+  become: true
+  roles:
+    - api
+
+- hosts: viewer
+  become: true
+  roles:
+    - frontend

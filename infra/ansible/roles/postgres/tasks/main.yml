@@ -1,0 +1,16 @@
+- name: Criar banco
+  become: true
+  shell: |
+    sudo -u postgres psql -c "CREATE DATABASE crud;"
+  ignore_errors: yes
+
+- name: Criar usuário
+  become: true
+  shell: |
+    sudo -u postgres psql -c "CREATE USER dev WITH PASSWORD '123456';"
+  ignore_errors: yes
+
+- name: Dar permissões
+  become: true
+  shell: |
+    sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE crud TO dev;"
